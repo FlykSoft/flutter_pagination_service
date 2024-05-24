@@ -6,10 +6,11 @@ import 'package:pagination_service/src/pagination_dto.dart';
 
 ///T is the type of the entity you want to paginate
 class PaginationController<T> extends PagingController<int, T> {
-  final PaginationDto _dto;
+  PaginationDto _dto;
   PaginatedList<T>? _paginatedList;
   bool _refreshInBackground = false;
   Completer<void> _refreshCompleter = Completer<void>();
+  bool isInitialized = false;
 
   PaginationController({
     final int page = PaginationDto.firstPage,
@@ -21,8 +22,13 @@ class PaginationController<T> extends PagingController<int, T> {
         _paginatedList = null,
         super(firstPageKey: PaginationDto.firstPage);
 
-  void init(final PageRequestListener<int> onRequest) =>
-      addPageRequestListener(onRequest);
+  void init(final PageRequestListener<int> onRequest) {
+    addPageRequestListener(onRequest);
+    isInitialized = true;
+  }
+
+  void maybeInit(final PageRequestListener<int> onRequest) =>
+      isInitialized ? null : init(onRequest);
 
   @override
   Future<void> refresh({
@@ -90,4 +96,6 @@ class PaginationController<T> extends PagingController<int, T> {
   List<T> get items => value.itemList ?? [];
 
   PaginationDto get nextDto => _dto.copyWith(page: _dto.page + 1);
+
+  set dto(PaginationDto dto) => _dto = dto;
 }

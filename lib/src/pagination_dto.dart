@@ -10,6 +10,15 @@ class PaginationDto {
     this.page = firstPage,
   });
 
+  factory PaginationDto.onInit({
+    int offset = defaultPaginationOffset,
+    int page = serverFirstPage,
+  }) =>
+      PaginationDto(
+        offset: offset,
+        page: page,
+      );
+
   PaginationDto copyWith({
     final int? offset,
     final int? page,
