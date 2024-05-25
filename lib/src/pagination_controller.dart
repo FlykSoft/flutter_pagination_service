@@ -52,7 +52,7 @@ class PaginationController<T> extends PagingController<int, T> {
 
   void insertData(final PaginatedList<T> data) {
     _paginatedList = data;
-    if (_hasMoreData) {
+    if (_hasMoreData(data)) {
       _dto.page += 1;
       appendPage(data.results, _dto.page);
     } else {
@@ -90,8 +90,9 @@ class PaginationController<T> extends PagingController<int, T> {
 
   int get count => _paginatedList?.count ?? 0;
 
-  bool get _hasMoreData =>
-      _paginatedList == null || _paginatedList!.count > items.length;
+  bool _hasMoreData(final PaginatedList<T> newData) =>
+      _paginatedList == null ||
+      _paginatedList!.count > items.length + newData.results.length;
 
   List<T> get items => value.itemList ?? [];
 
